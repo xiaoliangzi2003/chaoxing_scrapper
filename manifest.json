@@ -3,8 +3,17 @@
   "version": "1.0",
   "description": "爬取超星学习通题库并导出为多种格式",
   "manifest_version": 3,
-  "permissions": ["activeTab", "downloads", "storage"],
-  "host_permissions": ["*://*.chaoxing.com/*"],
+  "permissions": [
+    "activeTab", 
+    "storage"
+  ],
+  "host_permissions": [
+    "*://*.chaoxing.com/*", 
+    "https://tk.enncy.cn/*"
+  ],
+  "background": {
+    "service_worker": "background/background.js"
+  },
   "action": {
     "default_popup": "popup/popup.html",
     "default_icon": {
