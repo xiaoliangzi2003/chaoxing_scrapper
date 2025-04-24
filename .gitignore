@@ -1,0 +1,11 @@
+# 忽略resources文件夹及其内容
+resources/
+
+# 其他常见需要忽略的文件
+node_modules/
+.DS_Store
+*.log
+.vscode/
+.idea/
+*.zip
+*.rar
