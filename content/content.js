@@ -193,7 +193,7 @@ function exportData(format) {
   const { title, questions } = window.scrapedQuestionData;
   
   if (format === 'pdf') {
-    exportToPDF(title, questions);
+    exportAsTxt(title, questions, 'pdf');  // 将PDF导出改为TXT导出，但保留文件扩展名
     return;
   }
   
@@ -269,164 +269,46 @@ function exportData(format) {
   URL.revokeObjectURL(url);
 }
 
-// PDF导出功能 - 使用html2canvas完美支持中文
-function exportToPDF(title, questions) {
-  try {
-    // 显示加载提示
-    const loadingMsg = document.createElement('div');
-    loadingMsg.id = 'cx-pdf-loading';
-    loadingMsg.style.cssText = `
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: rgba(0, 0, 0, 0.7);
-      color: white;
-      padding: 15px 30px;
-      border-radius: 5px;
-      font-size: 16px;
-      z-index: 10000;
-    `;
-    loadingMsg.textContent = '正在生成PDF，请稍候...';
-    document.body.appendChild(loadingMsg);
-
-    // 创建一个样式美观的HTML元素用于转换为PDF
-    const container = document.createElement('div');
-    container.id = 'cx-pdf-container';
-    container.style.cssText = `
-      position: fixed;
-      left: -9999px;
-      top: 0;
-      width: 800px;
-      background-color: white;
-      font-family: "SimSun", "宋体", sans-serif;
-      padding: 40px;
-      line-height: 1.5;
-    `;
+// 简化的PDF导出功能 - 直接创建文本文件
+function exportAsTxt(title, questions, format) {
+  let content = title + '\n\n';
+  
+  // 添加所有题目到内容中
+  questions.forEach((q) => {
+    // 题号和题目内容
+    content += `${q.number}. ${q.content}\n`;
     
-    container.innerHTML = `
-      <div style="margin-bottom: 30px; text-align: center;">
-        <h1 style="font-size: 24px; margin-bottom: 20px;">${title}</h1>
-      </div>
-      <div id="questions-container"></div>
-    `;
-    
-    const questionsContainer = container.querySelector('#questions-container');
-    
-    // 添加所有问题到HTML容器
-    questions.forEach((q, index) => {
-      const questionDiv = document.createElement('div');
-      questionDiv.style.marginBottom = '30px';
-      
-      // 问题标题
-      const questionTitle = document.createElement('div');
-      questionTitle.style.fontSize = '16px';
-      questionTitle.style.fontWeight = 'bold';
-      questionTitle.style.marginBottom = '10px';
-      questionTitle.textContent = `${q.number}. ${q.content}`;
-      questionDiv.appendChild(questionTitle);
-      
-      // 问题选项
-      const optionsList = document.createElement('div');
-      optionsList.style.paddingLeft = '20px';
-      q.options.forEach(option => {
-        const optionItem = document.createElement('div');
-        optionItem.style.margin = '6px 0';
-        optionItem.textContent = option;
-        optionsList.appendChild(optionItem);
-      });
-      questionDiv.appendChild(optionsList);
-      
-      // 正确答案
-      if (q.answer) {
-        const answerPara = document.createElement('div');
-        answerPara.style.fontWeight = 'bold';
-        answerPara.style.marginTop = '10px';
-        answerPara.style.color = '#c00';
-        answerPara.textContent = `正确答案：${q.answer}`;
-        questionDiv.appendChild(answerPara);
-      }
-      
-      // 分隔线
-      if (index < questions.length - 1) {
-        const hr = document.createElement('hr');
-        hr.style.margin = '20px 0';
-        hr.style.border = 'none';
-        hr.style.borderTop = '1px solid #ddd';
-        questionDiv.appendChild(hr);
-      }
-      
-      questionsContainer.appendChild(questionDiv);
+    // 选项
+    q.options.forEach(option => {
+      content += `${option}\n`;
     });
     
-    // 将HTML添加到文档中
-    document.body.appendChild(container);
-    
-    // 使用html2canvas将HTML转换为canvas
-    setTimeout(() => {
-      html2canvas(container, {
-        scale: 2, // 提高质量
-        useCORS: true,
-        logging: false,
-        backgroundColor: '#ffffff'
-      }).then(canvas => {
-        // 创建PDF
-        const pdf = new jspdf.jsPDF({
-          orientation: 'portrait',
-          unit: 'mm',
-          format: 'a4'
-        });
-        
-        // 获取canvas的宽度和高度
-        const imgWidth = 210; // A4宽度，单位mm
-        const pageHeight = 295; // A4高度，单位mm
-        const imgHeight = canvas.height * imgWidth / canvas.width;
-        
-        // 将canvas转为图片
-        const imgData = canvas.toDataURL('image/png', 1.0);
-        
-        // 添加图片到PDF
-        let heightLeft = imgHeight;
-        let position = 0;
-        let pageNum = 1;
-        
-        // 首页
-        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
-        
-        // 添加其他页面
-        while (heightLeft > 0) {
-          position = heightLeft - imgHeight;
-          pdf.addPage();
-          pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-          heightLeft -= pageHeight;
-          pageNum++;
-        }
-        
-        // 保存PDF
-        pdf.save(`${title}.pdf`);
-        
-        // 清理DOM
-        document.body.removeChild(container);
-        document.body.removeChild(loadingMsg);
-      }).catch(error => {
-        console.error('PDF生成错误:', error);
-        document.body.removeChild(container);
-        document.body.removeChild(loadingMsg);
-        alert('PDF导出失败，请检查控制台获取详细错误信息');
-      });
-    }, 500); // 给DOM渲染一些时间
-    
-  } catch (error) {
-    console.error('PDF初始化错误:', error);
-    if (document.getElementById('cx-pdf-container')) {
-      document.body.removeChild(document.getElementById('cx-pdf-container'));
+    // 答案（如果有）
+    if (q.answer) {
+      content += `\n正确答案：${q.answer}\n`;
     }
-    if (document.getElementById('cx-pdf-loading')) {
-      document.body.removeChild(document.getElementById('cx-pdf-loading'));
-    }
-    alert('PDF导出初始化失败，请检查控制台获取详细错误信息');
-  }
+    
+    // 题目间隔
+    content += '\n';
+  });
+  
+  // 创建并下载文本文件
+  const blob = new Blob([content], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${title}.txt`;
+  a.click();
+  
+  URL.revokeObjectURL(url);
+  
+  // 弹出提示
+  alert('已将内容导出为文本文件。如需PDF格式，请复制文本到Word后另存为PDF。');
+}
+
+// 替换原来复杂的exportToPDF函数
+function exportToPDF(title, questions) {
+  exportAsTxt(title, questions, 'pdf');
 }
 
 // 初始化
