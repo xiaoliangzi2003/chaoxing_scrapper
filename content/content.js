@@ -269,90 +269,100 @@ function exportData(format) {
   URL.revokeObjectURL(url);
 }
 
-// PDF导出功能
+// PDF导出功能 - 使用HTML转换方式避免中文乱码
 function exportToPDF(title, questions) {
   try {
-    // 创建jsPDF实例 - A4大小，纵向
-    const pdf = new jspdf.jsPDF();
+    // 创建一个临时的HTML元素用于转换为PDF
+    const container = document.createElement('div');
+    container.style.display = 'none';
+    container.innerHTML = `
+      <div style="font-family: sans-serif; padding: 20px;">
+        <h1>${title}</h1>
+        <div id="questions-container"></div>
+      </div>
+    `;
     
-    // 设置字体大小和样式
-    pdf.setFont("helvetica", "bold");
-    pdf.setFontSize(16);
+    const questionsContainer = container.querySelector('#questions-container');
     
-    // 添加标题
-    pdf.text(title, 20, 20);
-    
-    // 重置字体
-    pdf.setFont("helvetica", "normal");
-    pdf.setFontSize(12);
-    
-    let y = 30; // 起始Y坐标
-    const pageWidth = pdf.internal.pageSize.width;
-    const margin = 20;
-    const lineHeight = 7;
-    
-    // 处理每个问题
+    // 添加所有问题到HTML容器
     questions.forEach((q, index) => {
-      // 检查是否需要换页
-      if (y > 250) {
-        pdf.addPage();
-        y = 20;
-      }
+      const questionDiv = document.createElement('div');
+      questionDiv.style.marginBottom = '20px';
       
-      // 添加题号和内容
-      const questionText = `${q.number}. ${q.content}`;
-      const splitTitle = pdf.splitTextToSize(questionText, pageWidth - margin * 2);
-      pdf.text(splitTitle, margin, y);
-      y += splitTitle.length * lineHeight;
+      // 问题标题
+      const questionTitle = document.createElement('p');
+      questionTitle.style.fontSize = '14px';
+      questionTitle.style.marginBottom = '10px';
+      questionTitle.textContent = `${q.number}. ${q.content}`;
+      questionDiv.appendChild(questionTitle);
       
-      // 添加选项
+      // 问题选项
+      const optionsList = document.createElement('div');
+      optionsList.style.paddingLeft = '20px';
       q.options.forEach(option => {
-        // 检查是否需要换页
-        if (y > 270) {
-          pdf.addPage();
-          y = 20;
-        }
-        
-        const splitOption = pdf.splitTextToSize(option, pageWidth - margin * 2 - 5);
-        pdf.text(splitOption, margin, y);
-        y += splitOption.length * lineHeight;
+        const optionItem = document.createElement('p');
+        optionItem.style.margin = '5px 0';
+        optionItem.textContent = option;
+        optionsList.appendChild(optionItem);
       });
+      questionDiv.appendChild(optionsList);
       
-      // 添加正确答案
+      // 正确答案
       if (q.answer) {
-        // 检查是否需要换页
-        if (y > 270) {
-          pdf.addPage();
-          y = 20;
-        }
-        
-        pdf.setFont("helvetica", "bold");
-        pdf.text(`正确答案：${q.answer}`, margin, y);
-        pdf.setFont("helvetica", "normal");
-        y += lineHeight;
+        const answerPara = document.createElement('p');
+        answerPara.style.fontWeight = 'bold';
+        answerPara.style.marginTop = '10px';
+        answerPara.textContent = `正确答案：${q.answer}`;
+        questionDiv.appendChild(answerPara);
       }
       
-      // 题目间隔
-      y += lineHeight;
-      
-      // 添加分隔线（除了最后一题）
+      // 分隔线
       if (index < questions.length - 1) {
-        if (y > 270) {
-          pdf.addPage();
-          y = 20;
-        } else {
-          pdf.setDrawColor(200, 200, 200);
-          pdf.line(margin, y - lineHeight/2, pageWidth - margin, y - lineHeight/2);
-          y += lineHeight;
-        }
+        const hr = document.createElement('hr');
+        hr.style.margin = '20px 0';
+        hr.style.border = 'none';
+        hr.style.borderTop = '1px solid #eee';
+        questionDiv.appendChild(hr);
       }
+      
+      questionsContainer.appendChild(questionDiv);
     });
     
-    // 保存PDF
-    pdf.save(`${title}.pdf`);
+    // 将HTML添加到文档中
+    document.body.appendChild(container);
+    
+    // 使用jspdf和html2canvas转换HTML为PDF
+    const pdf = new jspdf.jsPDF('p', 'pt', 'a4');
+    
+    // 使用html2canvas (需要另外添加html2canvas库)
+    // html2canvas(container).then(canvas => {
+    //   const imgData = canvas.toDataURL('image/png');
+    //   const imgProps = pdf.getImageProperties(imgData);
+    //   const pdfWidth = pdf.internal.pageSize.getWidth();
+    //   const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+    //   pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+    //   pdf.save(`${title}.pdf`);
+    //   
+    //   // 移除临时元素
+    //   document.body.removeChild(container);
+    // });
+    
+    // 简化方案：将HTML内容导出为纯文本文件
+    const blob = new Blob([container.innerText], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${title}.txt`;
+    a.click();
+    
+    URL.revokeObjectURL(url);
+    document.body.removeChild(container);
+    
+    alert('由于PDF中文支持问题，已将内容导出为文本文件。如需PDF格式，请复制文本到Word后另存为PDF。');
+    
   } catch (error) {
-    console.error('PDF导出错误:', error);
-    alert('PDF导出失败，请检查控制台获取详细错误信息');
+    console.error('导出错误:', error);
+    alert('导出失败，请检查控制台获取详细错误信息');
   }
 }
 

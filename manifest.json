@@ -16,7 +16,7 @@
   "content_scripts": [
     {
       "matches": ["*://*.chaoxing.com/*"],
-      "js": ["lib/jspdf.umd.min.js", "content/content.js"],
+      "js": ["lib/jspdf.umd.min.js", "lib/font.js", "content/content.js"],
       "css": ["content/content.css"]
     }
   ],
