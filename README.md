@@ -50,8 +50,11 @@ chaoxing_scrapper/
 │   └── content.css     # 悬浮窗样式
 ├── popup/              # 弹出窗口
 │   └── popup.html      # 插件弹出页面
-├── images/             # 图标资源
-└── resources/          # 开发资源
+├── icons/              # 图标资源
+│   ├── icon16.png      # 16x16 图标
+│   ├── icon48.png      # 48x48 图标
+│   └── icon128.png     # 128x128 图标
+└── .gitignore          # Git忽略文件配置
 ```
 
 ## 声明
