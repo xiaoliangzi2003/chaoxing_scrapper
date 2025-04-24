@@ -121,7 +121,7 @@ function parseQuestion(questionElement) {
   const questionType = questionTypeMatch ? questionTypeMatch[1] : '';
   const questionScore = questionTypeMatch ? questionTypeMatch[2] : '';
   
-  // 获取题干
+  // 获取题干 - 移除题型和分值部分
   const contentElement = questionElement.querySelector('.qtContent');
   const content = contentElement ? contentElement.textContent.trim() : '';
   
@@ -149,7 +149,7 @@ function parseQuestion(questionElement) {
     }
   }
   
-  // 组装问题数据
+  // 组装问题数据 - 需保存题型信息用于判断题答案处理，但不包含在导出内容中
   return {
     number: questionNumber,
     type: questionType,
@@ -177,8 +177,8 @@ function exportData(format) {
   
   if (format === 'txt' || format === 'md') {
     questions.forEach((q) => {
-      // 题号和题型
-      content += `${q.number}. (${q.type}, ${q.score}分)${q.content}\n`;
+      // 题号和题目内容（删除题型和分值信息）
+      content += `${q.number}. ${q.content}\n`;
       
       // 选项
       q.options.forEach(option => {
@@ -216,7 +216,8 @@ function exportData(format) {
     `;
     
     questions.forEach((q) => {
-      content += `<p><strong>${q.number}. (${q.type}, ${q.score}分)</strong>${q.content}</p>\n`;
+      // 修改Word格式的导出，删除题型和分值信息
+      content += `<p><strong>${q.number}.</strong> ${q.content}</p>\n`;
       content += '<p>';
       q.options.forEach(option => {
         content += `${option}<br>\n`;
@@ -232,7 +233,7 @@ function exportData(format) {
     
     content += '</body></html>';
   }
-  
+
   // 创建下载链接
   const blob = new Blob([content], { type: format === 'doc' ? 'application/msword' : 'text/plain' });
   const url = URL.createObjectURL(blob);
