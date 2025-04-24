@@ -16,13 +16,13 @@
   "content_scripts": [
     {
       "matches": ["*://*.chaoxing.com/*"],
-      "js": ["content/content.js"],
+      "js": ["lib/jspdf.umd.min.js", "content/content.js"],
       "css": ["content/content.css"]
     }
   ],
   "web_accessible_resources": [
     {
-      "resources": ["icons/*"],
+      "resources": ["icons/*", "lib/*"],
       "matches": ["*://*.chaoxing.com/*"]
     }
   ],

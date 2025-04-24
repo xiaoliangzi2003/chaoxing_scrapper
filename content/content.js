@@ -33,6 +33,7 @@ function createFloatingWindow() {
           <button id="cx-export-txt" class="cx-scrapper-btn"><span class="cx-btn-icon">📄</span>TXT</button>
           <button id="cx-export-md" class="cx-scrapper-btn"><span class="cx-btn-icon">📝</span>MD</button>
           <button id="cx-export-doc" class="cx-scrapper-btn"><span class="cx-btn-icon">📃</span>DOC</button>
+          <button id="cx-export-pdf" class="cx-scrapper-btn"><span class="cx-btn-icon">📎</span>PDF</button>
         </div>
       </div>
     </div>
@@ -79,6 +80,7 @@ function createFloatingWindow() {
   document.getElementById('cx-export-txt').addEventListener('click', () => exportData('txt'));
   document.getElementById('cx-export-md').addEventListener('click', () => exportData('md'));
   document.getElementById('cx-export-doc').addEventListener('click', () => exportData('doc'));
+  document.getElementById('cx-export-pdf').addEventListener('click', () => exportData('pdf'));
 }
 
 // 爬取题目数据
@@ -189,6 +191,12 @@ function exportData(format) {
   if (!window.scrapedQuestionData) return;
   
   const { title, questions } = window.scrapedQuestionData;
+  
+  if (format === 'pdf') {
+    exportToPDF(title, questions);
+    return;
+  }
+  
   let content = '';
   
   if (format === 'txt' || format === 'md') {
@@ -259,6 +267,93 @@ function exportData(format) {
   a.click();
   
   URL.revokeObjectURL(url);
+}
+
+// PDF导出功能
+function exportToPDF(title, questions) {
+  try {
+    // 创建jsPDF实例 - A4大小，纵向
+    const pdf = new jspdf.jsPDF();
+    
+    // 设置字体大小和样式
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(16);
+    
+    // 添加标题
+    pdf.text(title, 20, 20);
+    
+    // 重置字体
+    pdf.setFont("helvetica", "normal");
+    pdf.setFontSize(12);
+    
+    let y = 30; // 起始Y坐标
+    const pageWidth = pdf.internal.pageSize.width;
+    const margin = 20;
+    const lineHeight = 7;
+    
+    // 处理每个问题
+    questions.forEach((q, index) => {
+      // 检查是否需要换页
+      if (y > 250) {
+        pdf.addPage();
+        y = 20;
+      }
+      
+      // 添加题号和内容
+      const questionText = `${q.number}. ${q.content}`;
+      const splitTitle = pdf.splitTextToSize(questionText, pageWidth - margin * 2);
+      pdf.text(splitTitle, margin, y);
+      y += splitTitle.length * lineHeight;
+      
+      // 添加选项
+      q.options.forEach(option => {
+        // 检查是否需要换页
+        if (y > 270) {
+          pdf.addPage();
+          y = 20;
+        }
+        
+        const splitOption = pdf.splitTextToSize(option, pageWidth - margin * 2 - 5);
+        pdf.text(splitOption, margin, y);
+        y += splitOption.length * lineHeight;
+      });
+      
+      // 添加正确答案
+      if (q.answer) {
+        // 检查是否需要换页
+        if (y > 270) {
+          pdf.addPage();
+          y = 20;
+        }
+        
+        pdf.setFont("helvetica", "bold");
+        pdf.text(`正确答案：${q.answer}`, margin, y);
+        pdf.setFont("helvetica", "normal");
+        y += lineHeight;
+      }
+      
+      // 题目间隔
+      y += lineHeight;
+      
+      // 添加分隔线（除了最后一题）
+      if (index < questions.length - 1) {
+        if (y > 270) {
+          pdf.addPage();
+          y = 20;
+        } else {
+          pdf.setDrawColor(200, 200, 200);
+          pdf.line(margin, y - lineHeight/2, pageWidth - margin, y - lineHeight/2);
+          y += lineHeight;
+        }
+      }
+    });
+    
+    // 保存PDF
+    pdf.save(`${title}.pdf`);
+  } catch (error) {
+    console.error('PDF导出错误:', error);
+    alert('PDF导出失败，请检查控制台获取详细错误信息');
+  }
 }
 
 // 初始化
