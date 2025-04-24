@@ -33,7 +33,6 @@ function createFloatingWindow() {
           <button id="cx-export-txt" class="cx-scrapper-btn"><span class="cx-btn-icon">📄</span>TXT</button>
           <button id="cx-export-md" class="cx-scrapper-btn"><span class="cx-btn-icon">📝</span>MD</button>
           <button id="cx-export-doc" class="cx-scrapper-btn"><span class="cx-btn-icon">📃</span>DOC</button>
-          <button id="cx-export-pdf" class="cx-scrapper-btn"><span class="cx-btn-icon">📎</span>PDF</button>
         </div>
       </div>
     </div>
@@ -80,7 +79,6 @@ function createFloatingWindow() {
   document.getElementById('cx-export-txt').addEventListener('click', () => exportData('txt'));
   document.getElementById('cx-export-md').addEventListener('click', () => exportData('md'));
   document.getElementById('cx-export-doc').addEventListener('click', () => exportData('doc'));
-  document.getElementById('cx-export-pdf').addEventListener('click', () => exportData('pdf'));
 }
 
 // 爬取题目数据
@@ -191,12 +189,6 @@ function exportData(format) {
   if (!window.scrapedQuestionData) return;
   
   const { title, questions } = window.scrapedQuestionData;
-  
-  if (format === 'pdf') {
-    exportAsTxt(title, questions, 'pdf');  // 将PDF导出改为TXT导出，但保留文件扩展名
-    return;
-  }
-  
   let content = '';
   
   if (format === 'txt' || format === 'md') {
@@ -267,48 +259,6 @@ function exportData(format) {
   a.click();
   
   URL.revokeObjectURL(url);
-}
-
-// 简化的PDF导出功能 - 直接创建文本文件
-function exportAsTxt(title, questions, format) {
-  let content = title + '\n\n';
-  
-  // 添加所有题目到内容中
-  questions.forEach((q) => {
-    // 题号和题目内容
-    content += `${q.number}. ${q.content}\n`;
-    
-    // 选项
-    q.options.forEach(option => {
-      content += `${option}\n`;
-    });
-    
-    // 答案（如果有）
-    if (q.answer) {
-      content += `\n正确答案：${q.answer}\n`;
-    }
-    
-    // 题目间隔
-    content += '\n';
-  });
-  
-  // 创建并下载文本文件
-  const blob = new Blob([content], { type: 'text/plain' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `${title}.txt`;
-  a.click();
-  
-  URL.revokeObjectURL(url);
-  
-  // 弹出提示
-  alert('已将内容导出为文本文件。如需PDF格式，请复制文本到Word后另存为PDF。');
-}
-
-// 替换原来复杂的exportToPDF函数
-function exportToPDF(title, questions) {
-  exportAsTxt(title, questions, 'pdf');
 }
 
 // 初始化
