@@ -12,9 +12,30 @@
 }
 
 .cx-scrapper-minimized {
-  width: 200px;
-  height: 30px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
   overflow: hidden;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+
+.cx-scrapper-icon {
+  width: 100%;
+  height: 100%;
+  display: none;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.cx-scrapper-minimized .cx-scrapper-icon {
+  display: block;
+}
+
+.cx-scrapper-minimized .cx-scrapper-header,
+.cx-scrapper-minimized .cx-scrapper-body {
+  display: none;
 }
 
 .cx-scrapper-header {

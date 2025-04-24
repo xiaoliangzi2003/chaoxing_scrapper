@@ -7,9 +7,10 @@ function isQuestionBankPage() {
 function createFloatingWindow() {
   const floatDiv = document.createElement('div');
   floatDiv.id = 'cx-scrapper-float';
-  floatDiv.className = 'cx-scrapper-container';
+  floatDiv.className = 'cx-scrapper-container cx-scrapper-minimized';
   
   floatDiv.innerHTML = `
+    <div class="cx-scrapper-icon"></div>
     <div class="cx-scrapper-header">
       <h3>超星题库爬取</h3>
       <span class="cx-scrapper-close">✖</span>
@@ -33,9 +34,18 @@ function createFloatingWindow() {
   
   document.body.appendChild(floatDiv);
   
-  // 添加事件监听
+  // 设置图标背景
+  const iconElement = floatDiv.querySelector('.cx-scrapper-icon');
+  iconElement.style.backgroundImage = 'url(' + chrome.runtime.getURL('images/icon48.png') + ')';
+  
+  // 点击图标展开窗口
+  iconElement.addEventListener('click', () => {
+    floatDiv.classList.remove('cx-scrapper-minimized');
+  });
+  
+  // 点击关闭按钮最小化窗口
   document.querySelector('.cx-scrapper-close').addEventListener('click', () => {
-    floatDiv.classList.toggle('cx-scrapper-minimized');
+    floatDiv.classList.add('cx-scrapper-minimized');
   });
   
   // 拖拽功能
