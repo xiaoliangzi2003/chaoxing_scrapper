@@ -1,0 +1,28 @@
+{
+  "name": "超星学习通题库爬取器",
+  "version": "1.0",
+  "description": "爬取超星学习通题库并导出为多种格式",
+  "manifest_version": 3,
+  "permissions": ["activeTab", "downloads", "storage"],
+  "host_permissions": ["*://*.chaoxing.com/*"],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.chaoxing.com/*"],
+      "js": ["content/content.js"],
+      "css": ["content/content.css"]
+    }
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}
