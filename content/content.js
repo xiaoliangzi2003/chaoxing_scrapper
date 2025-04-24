@@ -16,17 +16,23 @@ function createFloatingWindow() {
       <span class="cx-scrapper-close">✖</span>
     </div>
     <div class="cx-scrapper-body">
+      <div class="cx-header-icon">
+        <img src="${chrome.runtime.getURL('icons/icon48.png')}" alt="Logo">
+        <h2>题库爬取器</h2>
+      </div>
       <button id="cx-start-scrape" class="cx-scrapper-btn">开始爬取</button>
       <div id="cx-progress-container" style="display: none;">
+        <div class="cx-progress-label">爬取进度</div>
         <progress id="cx-progress-bar" value="0" max="100"></progress>
         <span id="cx-progress-text">0%</span>
       </div>
       <div id="cx-export-container" style="display: none;">
-        <p>爬取完成，共<span id="cx-total-questions">0</span>道题</p>
+        <p class="cx-result-text">爬取完成，共<span id="cx-total-questions">0</span>道题</p>
+        <div class="cx-export-title">选择导出格式</div>
         <div class="cx-export-options">
-          <button id="cx-export-txt" class="cx-scrapper-btn">导出TXT</button>
-          <button id="cx-export-md" class="cx-scrapper-btn">导出MD</button>
-          <button id="cx-export-doc" class="cx-scrapper-btn">导出DOC</button>
+          <button id="cx-export-txt" class="cx-scrapper-btn"><span class="cx-btn-icon">📄</span>TXT</button>
+          <button id="cx-export-md" class="cx-scrapper-btn"><span class="cx-btn-icon">📝</span>MD</button>
+          <button id="cx-export-doc" class="cx-scrapper-btn"><span class="cx-btn-icon">📃</span>DOC</button>
         </div>
       </div>
     </div>
@@ -34,9 +40,9 @@ function createFloatingWindow() {
   
   document.body.appendChild(floatDiv);
   
-  // 设置图标背景
+  // 设置图标背景 - 修复图标路径
   const iconElement = floatDiv.querySelector('.cx-scrapper-icon');
-  iconElement.style.backgroundImage = 'url(' + chrome.runtime.getURL('images/icon48.png') + ')';
+  iconElement.style.backgroundImage = `url(${chrome.runtime.getURL('icons/icon48.png')})`;
   
   // 点击图标展开窗口
   iconElement.addEventListener('click', () => {
