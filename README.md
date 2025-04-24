@@ -54,8 +54,6 @@ chaoxing_scrapper/
 │   ├── icon16.png      # 16x16 图标
 │   ├── icon48.png      # 48x48 图标
 │   └── icon128.png     # 128x128 图标
-├── lib/                # 第三方库
-│   └── jspdf.min.js    # PDF生成库
 └── .gitignore          # Git忽略文件配置
 ```
 

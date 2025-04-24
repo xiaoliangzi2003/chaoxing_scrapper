@@ -2,40 +2,43 @@
   position: fixed;
   top: 20px;
   right: 20px;
-  width: 320px;
-  background-color: #fff;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
+  width: 340px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15), 0 3px 10px rgba(0, 0, 0, 0.08);
   z-index: 9999;
-  font-family: "Segoe UI", Arial, sans-serif;
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   overflow: hidden;
-  border: 1px solid #e0e0e0;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(226, 230, 234, 0.8);
+  backdrop-filter: blur(10px);
 }
 
 .cx-scrapper-minimized {
-  width: 56px;
-  height: 56px;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
-  overflow: hidden;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
   cursor: pointer;
-  transition: transform 0.2s ease;
-  border: 2px solid #3a8ee6;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12), 0 3px 6px rgba(0, 0, 0, 0.08);
+  transform: scale(0.98);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .cx-scrapper-minimized:hover {
   transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .cx-scrapper-icon {
   width: 100%;
   height: 100%;
   display: none;
-  background-size: cover;
+  background-size: 65%;
   background-position: center;
   background-repeat: no-repeat;
   border-radius: 50%;
+  background-color: #3e7bfa;
+  transition: background-color 0.3s ease;
 }
 
 .cx-scrapper-minimized .cx-scrapper-icon {
@@ -51,53 +54,55 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: linear-gradient(135deg, #3a8ee6 0%, #1e6fbb 100%);
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #4481eb 0%, #3e7bfa 100%);
   color: white;
-  padding: 12px 15px;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-  cursor: move;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .cx-scrapper-header h3 {
   margin: 0;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 500;
+  letter-spacing: 0.3px;
 }
 
 .cx-scrapper-close {
   cursor: pointer;
-  font-size: 18px;
-  font-weight: bold;
+  font-size: 16px;
   width: 24px;
   height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  transition: background-color 0.2s;
+  background: rgba(255, 255, 255, 0.2);
+  transition: background 0.2s ease;
 }
 
 .cx-scrapper-close:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.35);
 }
 
 .cx-scrapper-body {
   padding: 20px;
+  color: #333;
 }
 
 .cx-header-icon {
   display: flex;
   align-items: center;
-  margin-bottom: 15px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid #eaeaea;
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #f2f2f2;
 }
 
 .cx-header-icon img {
   width: 32px;
   height: 32px;
   margin-right: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 .cx-header-icon h2 {
@@ -111,36 +116,37 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 10px 16px;
-  background: linear-gradient(135deg, #3a8ee6 0%, #1e6fbb 100%);
+  padding: 10px 18px;
+  background: #3e7bfa;
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
-  margin-right: 8px;
-  margin-bottom: 8px;
-  transition: all 0.2s ease;
   font-weight: 500;
   font-size: 14px;
-  box-shadow: 0 2px 5px rgba(30, 111, 187, 0.3);
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(62, 123, 250, 0.3);
+  margin-right: 8px;
+  margin-bottom: 8px;
+  outline: none;
 }
 
 .cx-scrapper-btn:hover {
-  background: linear-gradient(135deg, #479aff 0%, #2984da 100%);
+  background: #2d6df6;
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(30, 111, 187, 0.4);
+  box-shadow: 0 4px 8px rgba(62, 123, 250, 0.4);
 }
 
 .cx-scrapper-btn:active {
   transform: translateY(0);
-  box-shadow: 0 1px 3px rgba(30, 111, 187, 0.3);
+  box-shadow: 0 1px 3px rgba(62, 123, 250, 0.3);
 }
 
 .cx-scrapper-btn:disabled {
-  background: #cccccc;
+  background: #c5d1e8;
   cursor: not-allowed;
-  box-shadow: none;
   transform: none;
+  box-shadow: none;
 }
 
 .cx-btn-icon {
@@ -150,68 +156,123 @@
 
 #cx-progress-container {
   margin-top: 20px;
-  padding: 15px;
-  border-radius: 8px;
-  background-color: #f5f9ff;
-  border: 1px solid #d9e8ff;
+  padding: 16px;
+  border-radius: 10px;
+  background-color: #f8faff;
+  border: 1px solid #e6eeff;
 }
 
 .cx-progress-label {
-  font-weight: 600;
-  margin-bottom: 8px;
-  color: #333;
   font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #333;
 }
 
 #cx-progress-bar {
   width: 100%;
-  height: 10px;
-  border-radius: 5px;
+  height: 8px;
+  border-radius: 4px;
   margin-bottom: 8px;
   appearance: none;
-  background-color: #e0e0e0;
-  color: #3a8ee6;
+  background-color: #e0e7ff;
+  color: #3e7bfa;
+  overflow: hidden;
 }
 
 #cx-progress-bar::-webkit-progress-bar {
-  background-color: #e0e0e0;
-  border-radius: 5px;
+  background-color: #e0e7ff;
+  border-radius: 4px;
 }
 
 #cx-progress-bar::-webkit-progress-value {
-  background: linear-gradient(90deg, #3a8ee6 0%, #5ca5f5 100%);
-  border-radius: 5px;
+  background: linear-gradient(90deg, #4481eb 0%, #3e7bfa 100%);
+  border-radius: 4px;
   transition: width 0.3s ease;
 }
 
 #cx-progress-text {
-  display: inline-block;
-  font-weight: bold;
-  color: #3a8ee6;
-  font-size: 14px;
-}
-
-.cx-export-title {
-  margin: 15px 0 10px;
+  display: block;
+  text-align: right;
+  font-size: 12px;
   font-weight: 600;
-  color: #333;
-  font-size: 14px;
+  color: #3e7bfa;
 }
 
 .cx-result-text {
-  color: #333;
-  font-weight: 600;
   font-size: 15px;
-  margin-top: 5px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 5px;
 }
 
 #cx-total-questions {
-  color: #3a8ee6;
-  font-weight: bold;
+  color: #3e7bfa;
+  font-weight: 700;
+}
+
+.cx-export-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+  margin: 16px 0 10px;
 }
 
 .cx-export-options {
-  margin-top: 12px;
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* 为不同导出按钮增加不同颜色 */
+#cx-export-txt {
+  background: #4caf50;
+  box-shadow: 0 2px 6px rgba(76, 175, 80, 0.3);
+}
+
+#cx-export-txt:hover {
+  background: #43a047;
+  box-shadow: 0 4px 8px rgba(76, 175, 80, 0.4);
+}
+
+#cx-export-md {
+  background: #ff9800;
+  box-shadow: 0 2px 6px rgba(255, 152, 0, 0.3);
+}
+
+#cx-export-md:hover {
+  background: #f57c00;
+  box-shadow: 0 4px 8px rgba(255, 152, 0, 0.4);
+}
+
+#cx-export-doc {
+  background: #2196f3;
+  box-shadow: 0 2px 6px rgba(33, 150, 243, 0.3);
+}
+
+#cx-export-doc:hover {
+  background: #1e88e5;
+  box-shadow: 0 4px 8px rgba(33, 150, 243, 0.4);
+}
+
+/* 移动端响应式设计 */
+@media screen and (max-width: 768px) {
+  .cx-scrapper-container {
+    width: 300px;
+    right: 10px;
+    top: 10px;
+  }
+  
+  .cx-scrapper-body {
+    padding: 15px;
+  }
+  
+  .cx-export-options {
+    flex-direction: column;
+  }
+  
+  .cx-scrapper-btn {
+    margin-right: 0;
+    width: 100%;
+  }
 }
